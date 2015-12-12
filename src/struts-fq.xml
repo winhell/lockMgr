@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="strfq" extends="my-default">
+		<action name="lk_*" class="lockaction" method="{1}"></action>
+		<action name="u_*" class="userAction" method="{1}"></action>
+		<action name="fo_*" class="forumaction" method="{1}"></action>
+		<action name="busi_*" class="businessAction" method="{1}"></action>
+	</package>
+</struts>    

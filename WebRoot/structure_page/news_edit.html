@@ -1,0 +1,25 @@
+﻿<script type="text/javascript">
+$(function(){
+	
+	$('#content').xheditor({html5Upload:false,upImgUrl : 'upload_uploadOfXheditor.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+
+	//$('#content').xheditor();
+});
+</script>
+<div style="padding: 15px; overflow: hidden">
+    <form id="form_edit" method="post">
+    <table class="tableForm" style="width: 100%">
+        <tr>
+         <td>
+                  标题：
+            </td>
+            <td>
+                <input type="text"  id="title" name="title"  class="easyui-validatebox" data-options="required:true"/>
+            </td>
+        </tr>
+        
+    </table>
+     <textarea id="content" name="content" rows="12" title="内容" cols="80" style="width: 100%">
+	</textarea>
+    </form>
+</div>

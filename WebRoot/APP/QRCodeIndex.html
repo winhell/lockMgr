@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>锁业APP索引页面</title>
+    <script type="text/javascript">
+        // 获取终端的相关信息
+        var Terminal = {
+            // 辨别移动终端类型
+            platform : function(){
+                var u = navigator.userAgent;
+                var app = navigator.appVersion;
+                return {
+                    // android终端或者uc浏览器
+                    android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1,
+                    // 是否为iPhone或者QQHD浏览器
+                    iPhone: u.indexOf('iPhone') > -1 ,
+                    // 是否iPad
+                    iPad: u.indexOf('iPad') > -1
+                };
+            }(),
+            // 辨别移动终端的语言：zh-cn、en-us、ko-kr、ja-jp...
+            language : (navigator.browserLanguage || navigator.language).toLowerCase()
+        };
+ 
+        // 根据不同的终端，跳转到不同的地址
+        var theUrl = 'http://www.google.com';
+        if(Terminal.platform.android){
+            theUrl = "http://120.24.58.163:8080/lockMgr/APP/lockSmithNc.apk";
+        }else if(Terminal.platform.iPhone || Terminal.platform.iPad){
+            theUrl = "http://www.baidu.com";
+        }
+ 
+        location.href = theUrl;
+        /* window.alert(navigator.userAgent);
+        window.onload=function(){
+    		document.getElementById("i").innerHTML = theUrl;
+   		 }; */
+    </script>
+</head>
+<body>
+	<!-- <p>请复制下面链接到浏览器进行下载安装：</p>
+	<div id="i"></div> -->
+</body>
+</html>

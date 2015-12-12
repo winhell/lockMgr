@@ -1,0 +1,225 @@
+<script type="text/javascript">
+
+
+function add_groupbuy(hrefurl,title,height,width,handlerurl,datagridid) {
+	var r = $("#"+datagridid).datagrid("getChecked");
+	if (r.length < 1) {
+		$.show_warning("错误", "请选择一条记录");
+		return;
+	}
+	if (r.length > 1) {
+		$.show_warning("错误", "一次只能选择一条记录");
+		$("#"+datagridid).datagrid('clearSelections').datagrid('clearChecked');
+		return;
+	}
+	$("<div/>").dialog(
+					{
+						href : hrefurl,
+						title : title,
+						height : height,
+						width :width,
+						modal : true,
+						iconCls : "icon-edit",
+						buttons : [
+								{
+									text : '确定添加',
+									iconCls : 'icon-edit',
+									handler : function() {
+										var d = $(this).closest('.window-body');
+										$("#form_edit")
+												.form(
+														{
+															url : handlerurl,
+															onSubmit : function(param) {
+																param.action = 'edit';
+																param.id = r[0].id;
+																return $(this).form('validate');
+															},
+															success : function(result) {
+																dealAjaxResult(
+																		result,
+																		function(r) {
+																			d.dialog('destroy');
+																			$.show_warning("提示","操作成功");
+																			$("#"+datagridid)
+																					.datagrid(
+																							"reload")
+																					.datagrid(
+																							'clearSelections')
+																					.datagrid(
+																							'clearChecked');
+																		});
+															}
+														});
+										$('#form_edit').submit();
+									}
+								},
+								{
+									text : '取消添加',
+									iconCls : 'icon-cancel',
+									handler : function() {
+										$(this).closest('.window-body')
+												.dialog('destroy');
+									}
+								} ],
+						onClose : function() {
+							$(this).dialog('destroy');
+						},
+						onLoad : function() {
+							loadForm("#form_edit",r[0]);
+						}
+					});
+}
+
+
+lock_search = function()
+{
+	$('#dg_lock').datagrid('reload', {
+		businessId: $("#lock_businessId").combobox('getValue'),
+		type : $('#lock_type').val(),
+		name : $('#lock_name').val(),
+		origin : $('#lock_origin').val()
+	});
+};
+
+
+$(function() {
+	
+	getSession(function f(r) {
+		var r = eval("(" + r + ")");
+		if (r!=null) {
+			if (r.roleName == "admin") {
+				//$('#dg_issuesitebusiness').datagrid('hideColumn','scenicName');
+				$("#lock_div1").attr("style", "display: inline");
+				$("#lock_businessId").combobox({
+				    url: "ba_getAllBusinessIdAndComment.action",
+				    valueField:'id',   
+				    textField:'name',  
+				    multiple:false,  
+				    panelHeight:'300',
+				    onLoadSuccess: function () { 
+				    	var data = $('#lock_businessId').combobox('getData');
+				        if (data.length > 0) {
+				            $('#lock_businessId').combobox('select', data[0].id);
+				        }
+				    }
+				});
+				};
+		}
+			else {
+				$.relogin();
+			}
+	});
+
+});
+
+
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		 &nbsp;
+		<div style="padding: 3px">
+            <div id="lock_div1" style="display: none;">
+            <input id="lock_businessId" name="lock.businessId" />
+            </div>
+		 	&nbsp;&nbsp;
+			商品名称：<input id="lock_name" name="name">
+			&nbsp;&nbsp;
+			商品型号：<input id="lock_type" name="type">
+			&nbsp;&nbsp;
+			产地：<input id="lock_origin" name="origin">
+			&nbsp;&nbsp;
+			<input type="button" value="查询" onclick="lock_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_lock" class="easyui-datagrid" title="商品管理"
+			data-options="url:'la_getLockByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[{
+                                    text:'添加商品',
+                                    iconCls:'icon-add',
+                                    handler:function(){
+                                    add('lock_add.html','添加商品','300','600','la_addLock.action','dg_lock')
+                                    }},'-',
+                                    {
+                                    text:'修改信息',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('lock_edit.html','修改信息','500','600','la_editLock.action','dg_lock')
+                                    }},'-',
+                                    {
+                                    text:'删除商品',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('la_deleteLock.action','dg_lock')
+                                    }},'-',
+                                    {
+                                    	text:'添加团购',
+                                    	iconCls:'icon-add',
+                                    	handler:function(){
+                                    		add_groupbuy('groupbuy_add.html','添加团购','300','600','gb_addGbLocks.action','dg_lock')
+                                    	}
+                                    }
+                                    ]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					
+					<th data-options="field:'businessName',align:'center',width:20">
+						产品所属商铺
+					</th>
+					<th data-options="field:'name',align:'center',width:20,sortable:true">
+						产品名称
+					</th>
+					
+					<th data-options="field:'type',align:'center',width:20,sortable:true" >
+						型号
+					</th>
+					<th data-options="field:'origin',align:'center',width:20,sortable:true">
+						产地
+					</th>
+					<!--<th data-options="field:'comment',align:'center',width:20" >
+						产品描述
+					</th>
+					
+					--><th data-options="field:'price',align:'center',width:20,sortable:true">
+						价格
+					</th>
+					
+					<th data-options="field:'sales',align:'center',width:20,sortable:true">
+						销量
+					</th>
+					<!-- 
+					<th data-options="field:'rating',align:'center',width:20,sortable:true" >
+						用户好评
+					</th>
+					 -->
+					<th data-options="field:'createtime',align:'center',width:30,sortable:true" formatter="formatterstringdate">
+						上架时间
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+	 
+	 
+	
+</div>

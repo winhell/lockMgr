@@ -1,0 +1,19 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task"  
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+           http://www.springframework.org/schema/tx  
+           http://www.springframework.org/schema/tx/spring-tx-3.0.xsd    
+           http://www.springframework.org/schema/aop  
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/task     
+    http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+    <bean id="lockService" class="com.lockMgr.service.LockService" autowire="byName"></bean>
+    <bean id="lockaction" class="com.lockMgr.controller.LocksAction" autowire="byName" scope="prototype"></bean>
+    <bean id="forumService" class="com.lockMgr.service.ForumService" autowire="byName"></bean>
+    <bean id="forumaction" class="com.lockMgr.controller.ForumAction" autowire="byName" scope="prototype"></bean>
+    <bean id="businessService" class="com.lockMgr.service.BusinessService" autowire="byName"></bean>
+    <bean id="businessAction" class="com.lockMgr.controller.BusinessAction" autowire="byName" scope="prototype"></bean>
+</beans>

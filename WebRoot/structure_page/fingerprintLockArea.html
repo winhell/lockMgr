@@ -1,0 +1,50 @@
+<!-- 广告管理(指纹锁区域) -->
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'center',border:false">
+		<table id="dg_fingerprintLock" class="easyui-datagrid" title="指纹锁广告图片管理"
+			data-options="url:'rp_getrotatePicture.action?type=4',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : true,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'添加',
+                                    iconCls:'icon-add',
+                                    handler:function()
+                                    {
+                                      add('fingerprintLock_add.html','添加','400','600','rp_addRotatePicture.action','dg_fingerprintLock')
+                                    }},'-',
+                                    {
+                                    text:'删除',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('rp_deleteRotatePicture.action','dg_fingerprintLock')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					
+					<th data-options="field:'createtime',align:'center',width:15,sortable:true" formatter="formatterstringdate">
+						上传时间
+					</th>
+					<th id="imageIdCard" data-options="field:'address', align:'center', width:15" formatter="formatterImage">
+						图片
+					</th>
+					<th data-options="field:'comment', align:'center', whdth:40">
+						说明
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+</div>

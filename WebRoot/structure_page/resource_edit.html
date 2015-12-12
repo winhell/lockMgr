@@ -1,0 +1,78 @@
+<script type="text/javascript">
+$(function(){
+
+});
+
+$('#resDescribe').xheditor({html5Upload:false,upImgUrl : 'upload_uploadOfXheditor.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+
+	<form id="form_edit" method="post">
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>
+					名称：
+				</td>
+				<td>
+					<input id="title" name="title" type="text" />
+				</td>
+				<td>
+					下载分数：
+				</td>
+				<td>
+					<input id="score" name="score" type="text" />
+				</td>
+			</tr>
+			
+			<tr>
+				<!-- <td>
+					车类:
+				</td>
+				<td>
+					<input id="carName" name="carName" class="easyui-combobox" 
+						data-options=" url:'resa_getAllCarNameAndId.action',
+                    	valueField:'name',  
+                   		textField:'name',  
+                    	multiple:false,
+                    	panelHeight:'auto' ">
+				</td> -->
+				<td>车名：</td>
+				<td><input id="carName" name="carName" type="text" /></td>
+				<td>车型：</td>
+				<td><input id="carType" name="carType" type="text"/></td>
+			</tr>
+			
+			<tr>
+				<td>
+					资源类型：
+				</td>
+				<td>
+					<select id="resourceType" name="resourceType" >
+						<option value="遥控介绍">遥控介绍</option>
+						<option value="电脑维修介绍">电脑维修介绍</option>
+						<option value="数据介绍">数据介绍</option>
+						<option value="钥匙介绍">钥匙介绍</option>
+					</select>
+				</td>
+				<td>
+					<select id="dataType" name="dataType">
+						<option>所有数据类型</option>
+						<option>发动机电脑数据</option>
+						<option>防盗数据</option>
+						<option>气囊数据</option>
+						<option>仪表数据</option>
+						<option>VIP数据</option>
+					</select>
+				</td>
+			</tr>
+
+		</table>
+		<textarea id="resDescribe" name="describe" rows="12" title=" 资源描述"
+			cols="80" style="width: 100%">
+	         </textarea>
+
+	</form>
+</div>
+

@@ -1,0 +1,205 @@
+<script type="text/javascript">
+	$(function() {
+		new AjaxUpload("resource_uploadbtn", {
+			name : "filedata",
+			action : "upload_upload.action?type=link",
+			onComplete : function(file, result) {
+				dealAjaxResult(result, function(r) {
+					var data = eval("(" + result + ")");
+					$("#address").val(data.msg);
+					$.show_warning("提示", "导入成功");
+					$("#resource_add_div1").attr("style", "display: inline");
+				});
+			}
+		});
+
+		$('#resDescribe').xheditor({
+			html5Upload : false,
+			upImgUrl : 'upload_uploadOfXheditor.action?type=img',
+			upImgExt : 'jpg,jpeg,gif,png'
+		});
+
+		$('#car_find_carName').combobox({
+			url : "resa_getAllCarName.action",
+			valueField : 'id',
+			textField : 'carName',
+			multiple : false,
+			panelHeight : 'auto',
+			onLoadSuccess : function() {
+
+			}
+		});
+		
+		$('#resDescribe').xheditor({html5Upload:false,upImgUrl:'upload_upload.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+	});
+	/*该方法是根据车系查询了车品牌后再查询该品牌的所有车型(最后又出了问题)*/
+	/*
+	function showCarCountry() {
+		var carcountry = $('#sel0').val();
+		var param = {};
+		param.timespan = new Date().getTime();
+		param.carCountry = carcountry;
+		$.ajax({
+			url : "resa_getCarsIdAndNameByCarCountry.action",
+			data : param,
+			type : "POST",
+			dataType : "text",
+			success : function(result) {
+				var result = eval("(" + result + ")");
+				$('#sel3').combobox({
+					data : result,
+					valueField : 'name',
+					textField : 'name',
+					multiple : false,
+					panelHeight : 'auto',
+					onSelect: function() {
+						var url = "resa_getCarTypeByCarName.action?carName=" + $('#sel3').combobox("getValue");
+						$('#sel4').combobox('reload', url);
+						$('#sel4').combobox({
+							data : result,
+							valueField : 'name',
+							textField : 'name',
+							multiple : false,
+							panelHeight : 'auto',
+						});
+					}
+				});
+			}
+		});
+	}
+	*/
+	
+	/*潭水龙说车类管理上传不用选择车型,所以以上方法不适用(但在添加资源时能输入车型)*/
+	function showCarCountry() {
+		var carcountry = $('#sel0').val();
+		var param = {};
+		param.timespan = new Date().getTime();
+		param.carCountry = carcountry;
+		$.ajax({
+			url : "resa_getCarsIdAndNameByCarCountry.action",
+			data : param,
+			type : "POST",
+			dataType : "text",
+			success : function(result) {
+				var result = eval("(" + result + ")");
+				$('#sel3').combobox({
+					data : result,
+					valueField : 'name',
+					textField : 'name',
+					multiple : false,
+					panelHeight : 'auto',
+				});
+			}
+		});
+	}
+	
+
+	var array = new Array();
+	array[1] = [ "所有数据类型", "发动机电脑数据", "防盗数据", "气囊数据", "仪表数据", "VIP数据" ];
+	function showDataType() {
+		var i = document.getElementById("sel1").selectedIndex;
+		var s2Obj = document.getElementById("sel2");
+		//清除sel2所有子节点
+		while (s2Obj.childNodes.length > 0) {
+			s2Obj.removeChild(s2Obj.firstChild);
+		}
+		var data = array[1];
+		if (i == 3) {
+			//该下拉选框设置为可见
+			document.getElementById("sel2").style.display = "block";
+			for ( var index = 0; index < data.length; index++) {
+				var newNode = document.createElement("option");
+				newNode.innerHTML = data[index];
+				document.getElementById("sel2").appendChild(newNode);
+			}
+		} else {
+			document.getElementById("sel2").style.display = "none";
+		}
+	}
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+
+	<form id="form_add" method="post">
+		<input type="hidden" name="resource.address" id="address" />
+		&nbsp;&nbsp;&nbsp;
+		<button id="resource_uploadbtn">上传资源(<1G)</button>
+		<div style="display: none;" id="resource_add_div1">
+			<img alt="" src="../images/ok.png">
+		</div>
+
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>名称：</td>
+				<td><input id="title" name="resource.title" type="text" /></td>
+                <!--
+				<td>类型：</td>
+				<td><select name="resource.type" id="type">
+						<option value="0">技术</option>
+						<option value="1">开锁</option>
+				</select></td>
+			</tr>
+			<tr>
+				<td>等级：</td>
+				<td><select name="resource.rank" id="rank">
+						<option value="0">普通</option>
+						<option value="1">vip</option>
+				</select></td>
+				-->
+				<td>下载分数：</td>
+				<td><input id="score" name="resource.score" type="text" /></td>
+			</tr>
+			<tr>
+				<td>车系:</td>
+				<td>
+				<select id="sel0" name="resource.carCountry" onchange="showCarCountry();">
+						<option>所有车系</option>
+						<option>欧洲车系</option>
+						<option>美洲车系</option>
+						<option>日韩车系</option>
+						<option>国产车系</option>
+				</select> 
+				</td>
+				<td>车品牌:</td>
+				<td>
+					<input id="sel3" name="resource.carName" class="easyui-combobox" />
+				</td>
+			</tr>
+			<tr>
+				<td>车型(可选)：</td>
+				<td>
+					<input id="sel4" name="resource.carType" type="text" />
+				</td>
+			</tr>
+			<tr>
+				<!-- 
+					<input id="id" name="car.carName" class="easyui-combobox" 
+						data-options=" url:'resa_getAllCarNameAndId.action',
+                    	valueField:'id',  
+                   		textField:'name',  
+                    	multiple:false,
+                    	panelHeight:'auto' ">
+                --> 
+                <td>资源类型：</td>
+                <td>
+               	<select id="sel1" name="resource.resourceType" onchange="showDataType();">
+						<option>所有资源类型</option>
+						<option>遥控介绍</option>
+						<option>电脑维修介绍</option>
+						<option>数据介绍</option>
+						<option>钥匙介绍</option>
+				</select> 
+				</td>
+				<td>
+				<select id="sel2" name="resource.dataType" style="display: none;">
+				</select>
+				</td>
+			</tr>
+		</table>
+		<textarea id="resDescribe" name="resource.resDescribe" rows="12"
+			title=" 资源描述" cols="80" style="width: 100%">
+	         </textarea>
+
+	</form>
+</div>
+

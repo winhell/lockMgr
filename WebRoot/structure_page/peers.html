@@ -1,0 +1,133 @@
+<script type="text/javascript">
+operator_search = function()
+{
+	$('#dg_verifyPeers').datagrid('load', {
+		verify : $('#verifyBusiness_verify').val()
+	});
+};
+
+$(document).ready(function(){
+  $("#BusinessLicense, #PoliceProve, #imageIdCard").click(function(){
+    alert(this.val());
+    $("imgdiv").append("<img src=this.val()/>");
+  });
+});
+
+business_cancelCheckBox=function(data){
+    if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+            if (data.rows[i].verify==1) {
+            	$("input[type='checkbox']")[i + 1].disabled = true;
+            }
+        }
+    }
+};
+
+
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		 &nbsp;
+		<div style="padding: 3px">
+			  状态:
+			<select id="verifyBusiness_verify">
+			<option value="-1">所有</option>
+			<option value="0">未审核</option>
+			<option value="1">审核通过</option>
+			<option value="2">审核拒绝</option>
+			</select>
+			<input type="button" value="查询" onclick="operator_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_verifyPeers" class="easyui-datagrid" title="同行管理"
+			data-options="url:'user_getPeersByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : true,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                onLoadSuccess :business_cancelCheckBox,
+			                  rowStyler:function(index,row){   
+                                  if (row.verify==1){   
+                                     return 'background-color:#9CEEB0;';   
+                                        } 
+                                        else if (row.verify==2){   
+                                     return 'background-color:red;';   
+                                        } 
+                                       },
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'审核通过',
+                                    iconCls:'icon-ok',
+                                    handler:function()
+                                    {
+                                      audit('user_passVerify.action','dg_verifyPeers',1)
+                                    }},'-',
+                                    {
+                                    text:'审核拒绝',
+                                    iconCls:'icon-cancel',
+                                    handler:function()
+                                    {
+                                      audit('user_refuseVerify.action','dg_verifyPeers',2)
+                                    }},'-',
+                                    {
+                                    text:'删除',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      audit('user_deletePeers.action','dg_verifyPeers')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					
+					<th data-options="field:'createtime',align:'center',width:15,sortable:true" formatter="formatterstringdate">
+						申请时间
+					</th>
+					<th data-options="field:'userName',align:'center',width:10" >
+						用户名
+					</th>
+					<th data-options="field:'phone',align:'center',width:10">
+						电话
+					</th>
+					<th data-options="field:'companyName',align:'center',width:10">
+						公司名称
+					</th>
+					<th data-options="field:'companyAddress',align:'center',width:15">
+						公司地址
+					</th>
+					<th data-options="field:'idCard', align:'center', width:15 ">
+						身份证号码
+					</th>
+					<th id="imageIdCard" data-options="field:'imageIdCard', align:'center', width:15" formatter="formatterImage">
+						身份证照片
+					</th>
+					<th id="BusinessLicense" data-options="field:'imageBusinessLicense', align:'center', width:15" formatter="formatterImage">
+						营业执照
+					</th>
+					<th id="PoliceProve" data-options="field:'imagePoliceProve', align:'center', width:15" formatter="formatterImage">
+						公安备案
+					</th>
+					<th data-options="field:'verifyName',align:'center',width:10" >
+						状态
+					</th>
+					<th data-options="field:'content', align:'center', width:15 ">
+						简介
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+</div>

@@ -1,0 +1,131 @@
+﻿<script type="text/javascript">
+    var userrole_setprivilege = function () {
+        var user_row = $("#dg_userrole").datagrid("getChecked");
+        if (user_row.length < 1) {
+    		$.show_warning("错误", "请选择一条记录");
+    		return;
+    	}
+    	if (user_row.length > 1) {
+    		$.show_warning("错误", "一次只能修改一条记录");
+    		$("#dg_userrole").datagrid('clearSelections').datagrid(
+    				'clearChecked');
+    		return;
+
+    	}
+    	 user_row = $("#dg_userrole").datagrid("getSelected");  //getChecked和getSelected有很大的区别，getChecke得到的时数组而getSelected是对象
+        $('#userrole_tre').tree({
+            url: "ura_getPrivilegesTree.action?roleId=" + user_row.id + "&_=" + new Date().getTime(),
+            checkbox: true,
+            lines: true
+
+        });
+        $('#userrole_win_setRoll').dialog({
+            title: "设置权限--" + user_row.name,
+            width: 300,
+            height: 400,
+            iconCls: "icon-key",
+            modal: true,
+            buttons: [{
+                text: '保存设置',
+                iconCls: 'icon-key',
+                handler: function () { userrole_saveRoleMenu(user_row.id); }
+            },
+                {
+                    text: '取消设置',
+                    iconCls: 'icon-cancel',
+                    handler: function () { $(this).closest('.window-body').dialog('close') }
+                }]
+
+        });
+        $('#userrole_win_setRoll').dialog("open");
+    }
+
+    function userrole_saveRoleMenu(rid) {
+        roleMenu = "";
+        var parentId;
+        var parent;
+        $.each($("#userrole_tre").tree("getChecked"), function (i, node) {
+           if ($(this).tree("isLeaf", node.target)) {
+            	 parent=$(this).tree("getParent", node.target);
+                  if(parent.id!=parentId)
+                	{
+                	  parentId=parent.id;
+                	  roleMenu = roleMenu + parentId + ",";
+                	}
+                roleMenu = roleMenu + node.id + ",";
+            }
+        });
+        var para = {};
+        para.timespan = new Date().getTime();
+        para.menuId = roleMenu;
+        para.roleId = rid;
+        $.ajax({
+            url: "ura_savePrivilege.action",
+            data: para,
+            type: "GET",
+            dataType: "text",
+            success: function (result) {
+                dealAjaxResult(result, function (r) {
+                    $('#userrole_win_setRoll').dialog('close');
+                    $.show_warning("提示", "操作成功");
+                    $("#datagrid").datagrid("reload")
+                })
+            }
+        });
+    }
+
+        
+</script>
+<table id="dg_userrole" class="easyui-datagrid" title="角色权限设置" data-options="singleSelect:false,
+                                collapsible:true,
+                                url:'ura_getAllRole.action',
+                                fitColumns:true,rownumbers:true,
+                                fit:true,
+                                remoteSort:false,
+                                nowrap:false,
+                                idField:'id',
+                                toolbar:[{
+                                    text:'添加角色',
+                                    iconCls:'icon-add',
+                                    handler:function(){
+                                    add('userrole_add.html','添加角色','200','350','ura_addRole.action','dg_userrole')
+                                    }},'-',
+                                    {
+                                    text:'修改角色',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('userrole_edit.html','修改角色','200','350','ura_editRole.action','dg_userrole')
+                                    }},'-',
+                                    {
+                                    text:'删除角色',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('ura_deleteRole.action','dg_userrole')
+                                    }},'-',
+                                    {
+                                    text:'设置权限',
+                                    iconCls:'icon-key',
+                                    handler:userrole_setprivilege
+                                }]">
+    <thead>
+        <tr>
+            <th data-options="field:'ck',checkbox:true">
+            </th>
+            <th data-options="field:'name',align:'center',width:50,sortable:true" formatter="formatterrole">
+                角色名称
+            </th>
+            <th data-options="field:'comment',align:'center',width:50" >
+                备注
+            </th>
+            <th data-options="field:'createtime',align:'center',width:50,sortable:true">
+                添加时间
+            </th>
+        </tr>
+    </thead>
+</table>
+<div id="userrole_win_setRoll" class="easyui-dialog" data-options="closed:true" style="padding: 15px">
+    <ul id="userrole_tre">
+    </ul>
+</div>

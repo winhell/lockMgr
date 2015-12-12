@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="lzc" extends="my-default">
+		<action name="news_*" class="newsAction" method="{1}"></action>
+		<action name="shop_*" class="shopAction" method="{1}"></action>
+		<action name="user_*" class="userAction" method="{1}"></action>
+		<action name="download_*" class="downloadAction" method="{1}"></action>
+		<action name="gb_*" class="groupbuyAction" method="{1}"></action>
+		<action name="resource_*" class="resourceAction" method="{1}"></action>
+		<!-- 软件下载(resourceOfSoftware) -->
+		<action name="ros_*" class="resourceOfSoftwareAction" method="{1}"></action>
+		<action name="uot_*" class="uotAction" method="{1}"></action>
+		<action name="wd_*" class="withdrawAction" method="{1}"></action>
+		<action name="rp_*" class="rotatePictureAction" method="{1}"></action>
+		<action name="radio_*" class="radioAction" method="{1}"></action>
+		<!-- 生活服务商户(Businessoflifeservice) -->
+		<action name="bols_*" class="businessoflifeserviceAction" method="{1}"></action>
+		<!-- vip -->
+		<action name="vip_*" class="vipService" method="{1}"></action>
+		<action name="withdraw" class="com.lockMgr.controller.AlipayAction">
+			<result name="ok" type="redirect">
+				http://mapi.alipay.com/gateway.do?${params}
+			</result>
+		</action>
+		<action name="getUserSession" class="getUserSessionAction" method="getUserSession"></action>
+		<action name="mail_*" class="mailAction" method="{1}"></action>
+		<!-- 网页端论坛页面 -->
+		<!-- 论坛首页(根据时间排序论坛帖) -->
+		<action name="getNewsByTimeOfComputer" class="newsAction" method="getNewsByTimeOfComputer">
+			<param name="limit">4</param>
+			<result name="success">
+				/templates/frontend/blog.jsp
+			</result>
+		</action>
+		<!-- 帖子详情(浏览帖) -->
+		<action name="viewOfComputer" class="newsAction" method="viewOfComputer">
+			<result name="success">
+				/templates/frontend/blog-item.jsp
+			</result>
+		</action>
+		<!-- 查看评论(从第二页开始) -->
+		<action name="getReviewOfComputer" class="newsAction" method="getReviewOfComputer">
+			<param name="limit">10</param>
+			<result name="success">
+				/templates/frontend/blog-review.jsp
+			</result>
+		</action>
+	</package>
+</struts>

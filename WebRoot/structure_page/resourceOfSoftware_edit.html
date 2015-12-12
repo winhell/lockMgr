@@ -1,0 +1,36 @@
+<script type="text/javascript">
+$(function(){
+
+});
+
+$('#resDescribe').xheditor({html5Upload:false,upImgUrl : 'upload_uploadOfXheditor.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+
+	<form id="form_edit" method="post">
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>
+					名称：
+				</td>
+				<td>
+					<input id="title" name="title" type="text" />
+				</td>
+				<td>
+					下载分数：
+				</td>
+				<td>
+					<input id="score" name="score" type="text" />
+				</td>
+			</tr>
+
+		</table>
+		<textarea id="resDescribe" name="describe" rows="12" title=" 资源描述"
+			cols="80" style="width: 100%">
+	         </textarea>
+
+	</form>
+</div>
+

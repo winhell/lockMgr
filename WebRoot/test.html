@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<script type="text/javascript">
+	var map = new BMap.Map('baiduMap');
+	map.centerAndZoom("南昌市");
+	map.enablePinchToZoom();
+	map.enableDragging();
+	if (x > 0) {
+		var point = new BMap.Point(urls.getLati(), urls.getLngti());
+		console.log('point', point);
+		map.panTo(point);
+		var marker = new BMap.Marker(point);
+		map.addOverlay(marker);
+		var infoWindow = new BMap.InfoWindow("您当前位置", {
+			width : 300,
+			height : 50
+		});
+		map.openInfoWindow(infoWindow, map.getCenter());
+	} else {
+		navigator.geolocation.getCurrentPosition(function successCallBack(
+				position) {
+			if (position.coords.accuracy < 500) {
+				urls.setLati(position.coords.latitude);
+				urls.setLngti(position.coords.longitude);
+				var vpoint = new BMap.Point(urls.getLati(), urls.getLngti());
+				map.panTo(vpoint);
+				var marker1 = new BMap.Marker(vpoint);
+				map.addOverlay(marker1);
+				var infoWindow = new BMap.InfoWindow("您当前位置", {
+					width : 300,
+					height : 50
+				});
+				map.openInfoWindow(infoWindow, map.getCenter());
+			}
+		}, function errorCallback(error) {
+			switch (error.code) {
+			case error.PERMISSION_DENIED:
+				Ext.Msg.alert('请开启定位以获取更好的体验！');
+				break;
+			case error.POSITION_UNAVAILABLE:
+				Ext.Msg.alert('定位服务暂不可用！');
+				break;
+			case error.TIMEOUT:
+				Ext.Msg.alert('定位超时！');
+				break;
+			case error.UNKNOWN_ERROR:
+				Ext.Msg.alert('未知的错误！');
+				break;
+			}
+		}, {
+			timeout : 10000,
+			maximumAge : 30000
+		});
+	}
+</script>
+<body>
+
+</body>
+</html>

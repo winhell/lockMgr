@@ -1,0 +1,160 @@
+<script type="text/javascript">
+$(function() {
+	//address拆分
+	//var address = document.getElementById("address");
+	//modifyAddress(address);
+	
+	getSession(function f(r) {
+		var r = eval("(" + r + ")");
+		if (r!=null) {
+			if (r.roleName == "admin") {
+				};
+			}
+			else {
+				$.relogin();
+			}
+	});
+	business_modify_init();
+	$('#comment').xheditor({html5Upload:false,upImgUrl : 'upload_uploadOfXheditor.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+
+});
+
+function modifyAddress(address) {
+	if(address.contains("省")) {
+		var addr = new Array();
+		addr = address.split("省");
+		document.getElementById("addressOne").innerHTML = addr[0];
+		address = addr[1];
+	}
+	var addre = new Array();
+	addre = address.split("市");
+	document.getElementById("addressTwo").innerHTML = addre[0];
+	address = addre[1];
+	if(address.contains("区")) {
+		var addres = new Array();
+		addres = address.split("区");
+		document.getElementById("addressThree").innerHTML = addres[0];
+		document.getElementById("addressFour").innerHTML = addres[1];
+	}
+}
+
+var g_AjxTempDir = "../file/img/";
+//var id = "";
+function business_modify_init() {
+	//初始化图片上传  
+	var btnImg = document.getElementById("business_modify_btnUploadImg");
+	var img = document.getElementById("show_image");
+	var business_modify_hidImgName = document.getElementById("business_modify_hidImgName");
+	g_AjxUploadImg(btnImg, img, business_modify_hidImgName);
+}
+//图片上传  
+function g_AjxUploadImg(btn, img, hidPut) {
+	var button = btn, interval;
+	new AjaxUpload(button, {
+		action : 'upload_uploadImg.action',
+		data : {
+			//id : id
+		},
+		name : 'filedata',
+		onSubmit : function(file, ext) {
+			//id = $("#id").val();
+			if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF)$/.test(ext))) {
+				alert("您上传的图片格式不对，请重新选择！");
+				return false;
+			}
+		},
+		onComplete : function(file, response) {
+			var response = eval("(" + response + ")");
+			flagValue = response;
+			if (flagValue == "1") {
+				alert("您上传的图片格式不对，请重新选择！");
+			} else if (flagValue == "2") {
+				alert("您上传的图片大于2M，请重新选择！");
+			} else if (flagValue == "3") {
+				alert("图片上传失败！");
+			} else {
+				hidPut.value = response;
+				img.src = g_AjxTempDir + response+"?_"+new Date().getTime();
+				$("#image").val(response);
+			}
+		}
+	});
+}
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+
+	<form id="form_edit" method="post">
+		<input type="hidden" name="business.image" class="image" id="image" />
+
+		<div class="uploadImg" align="center">
+			<img id="show_image" src="" height="200" width="160" />
+		</div>
+		<br>
+		<div class="uploadImg" align="center">
+			<input type="hidden" id="business_modify_hidImgName" /> 
+			<input type="button" id="business_modify_btnUploadImg" value="图片上传" />
+		</div>
+		
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>商户(企业)名称： <input id="company" name="business.company"
+				 class="easyui-validatebox" data-options="required:true" />
+				 </td>
+				<td>负&nbsp;责&nbsp;人&nbsp;：&nbsp;<input id="realName" name="business.realName" type="text"
+				 class="easyui-validatebox" data-options="required:true" />
+				</td>
+			</tr>
+			<tr>
+				<td>坐&nbsp;标&nbsp;&nbsp;(经度)&nbsp;：&nbsp;<input type="text" id="pointX" name="business.pointX"
+				 class="easyui-validatebox" data-options="required:true">
+				</td>
+				<td>坐标(纬度)：<input type="text" id="pointY" name="business.pointY"
+				 class="easyui-validatebox" data-options="required:true">
+				</td>
+			</tr>
+			<tr>
+				<td>电话:<input id="tel" name="business.tel" class="easyui-validatebox"
+					data-options="required:true" />
+				</td>
+				<td>
+					优先级：
+					<select id="rating" name="business.rating">
+						<option value="0">普通</option>
+						<option value="1">优先</option>
+						<option value="2">特级</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td id="type" >
+					商户类型：
+					<input type="radio" name="business.type" value="0" />批发商
+					<input type="radio" name="business.type" value="1" />零售商
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" width="100">
+					地址：
+					<input id="address" name="business.address" type="text" style="FONT-FAMILY: Arial; width:300px;" 
+						class="easyui-validatebox" data-options="required:true" />
+					(*修改时注意按照省市区规范)
+				</td>
+			</tr>
+			
+			<tr>
+				<td>
+					<input id="userId" name="business.userId" style="display: none;"/>
+					<input id="verify" name="business.verify" style="display: none;"/>
+					<input id="status" name="business.status" style="display: none;"/>
+					<input id="createtime" name="business.createtime" style="display: none;"/>
+				</td>
+			</tr>
+
+		</table>
+		<textarea id="comment" name="business.comment" rows="12" title="商户描述"
+			cols="80" style="width: 100%">
+	    </textarea>
+	</form>
+</div>
+

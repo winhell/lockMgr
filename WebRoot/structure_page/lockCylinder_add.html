@@ -1,0 +1,83 @@
+<script type="text/javascript">
+$(function() {
+	rotatePicture_add_init();
+});
+var g_AjxTempDir = "../file/rotatePicture/";
+//var id = "";
+function rotatePicture_add_init() {
+	//初始化图片上传  
+	var btnImg = document.getElementById("rpa_btnUploadImg");
+	var img = document.getElementById("rpashow_image");
+	var rp_add_hidImgName = document.getElementById("rpa_hidImgName");
+	g_AjxUploadImg(btnImg, img, rp_add_hidImgName);
+}
+//图片上传  
+function g_AjxUploadImg(btn, img, hidPut) {
+	var button = btn, interval;
+	new AjaxUpload(button, {
+		action : 'upload_uploadImgOfAdvertisement.action',
+		/* data : {
+			//id : id
+			uploadImgType : "rotatePicture",
+		}, */
+		/* scriptData : {
+			"uploadImgType" : "rotatePicture",
+		}, */
+		name : 'filedata',
+		onSubmit : function(file, ext) {
+			//id = $("#id").val();
+			if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF)$/.test(ext))) {
+				alert("您上传的图片格式不对，请重新选择！");
+				return false;
+			}
+		},
+		onComplete : function(file, response) {
+			var response = eval("(" + response + ")");
+			flagValue = response;
+			if (flagValue == "1") {
+				alert("您上传的图片格式不对，请重新选择！");
+			} else if (flagValue == "2") {
+				alert("您上传的图片大于2M，请重新选择！");
+			} else if (flagValue == "3") {
+				alert("图片上传失败！");
+			} else {
+				hidPut.value = response;
+				//img.src = g_AjxTempDir + response+"?_"+new Date().getTime();
+				img.src = g_AjxTempDir + response;
+				$("#rpa_image").val(response);
+			}
+		}
+	});
+}
+
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+	<form id="form_add" method="post">
+		<input type="hidden" name="address" class="image" id="rpa_image" />
+
+		<div class="uploadImg" align="center">
+			<img id="rpashow_image" src="" height="200" width="160" />
+		</div>
+		<br>
+		<div class="uploadImg" align="center">
+			<input type="hidden" id="rpa_hidImgName" /> 
+			<input type="button" id="rpa_btnUploadImg" value="图片上传" />
+		</div>
+		说明：<input name="comment" type="text" />
+		<!-- 
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>图片类型：
+					<select name="type">
+						<option value="1">首页图片</option>
+						<option value="2">论坛图片</option>
+					</select>
+				</td>
+			</tr>
+		</table>
+		-->
+		<input name="type" type="hidden" value="5" />
+
+	</form>
+</div>

@@ -1,0 +1,185 @@
+<script type="text/javascript">
+	$(function() {
+		$('#dg_news')
+				.datagrid(
+						{
+							view : detailview,
+							detailFormatter : function(index, row) {
+								return '<div style="padding:2px"><table id="menu_ddv-' + index + '"></table></div>';
+							},
+							onExpandRow : function(index, row) {
+								$('#menu_ddv-' + index)
+										.datagrid(
+												{
+											
+													url : 'reva_getForumByPage.action?newsId='
+															+ row.id,
+													fitColumns : true,
+													singleSelect : false,
+													 pagination : true,
+									                  pageSize : 10,
+									                 pageList : [ 10, 20, 30, 40, 50 ],
+													rownumbers : true,
+													columns : [ [ 
+													               {
+			                                               	field : 'ck',
+				                                             checkbox : true
+			                                                },{
+														field : 'userName',
+														title : '评论人',
+														width : 80
+													}, {
+														field : 'content',
+														title : '评论内容',
+														width : 100
+													}
+													, {
+														field : 'createtime',
+														title : '评论时间',
+														width : 80
+													}] ],
+													toolbar : [
+															{
+																text : '删除',
+																iconCls : 'icon-remove',
+																handler :function(){
+																	del('reva_deleteReview.action','menu_ddv-' + index)
+																}
+
+															},
+															'-',
+															{
+																text : '修改',
+																iconCls : 'icon-edit',
+																handler : function(){
+																	edit('menu_edit.html','修改菜单','200','320','ma_updateMenu.action','menu_ddv-' + index);
+																}
+
+															} ],
+													onResize : function() {
+														$('#dg_news')
+																.datagrid(
+																		'fixDetailRowHeight',
+																		index);
+													},
+													onLoadSuccess : function() {
+														setTimeout(
+																function() {
+																	$(
+																			'#dg_news')
+																			.datagrid(
+																					'fixDetailRowHeight',
+																					index);
+																}, 0);
+													}
+												});
+								$('#dg_news').datagrid('fixDetailRowHeight',
+										index);
+							}
+						});
+		
+		 $("#news_begindate").datetimebox({    
+			    value: getCurDateyy_mm_dd(),  
+			    formatter: formaterdate, 
+			    parser: parserdate
+			}); 
+      $("#news_enddate").datetimebox({    
+			    value: getNextDateyy_mm_dd(),  
+			    formatter: formaterdate, 
+			    parser: parserdate
+			}); 
+	});
+news_search = function() {
+		var startDate = $("#news_begindate").datebox('getValue');
+		var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+		var endDate = $("#news_enddate").datebox('getValue');
+		var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+		if (end < start) {
+			alert("结束日期不能小于开始日期");
+			return false;
+		}
+		if (endDate.length <= 0 || startDate.length <= 0) {
+			alert("日期不能为空");
+			return false;
+		}
+		$('#dg_news').datagrid('load', {
+			beginDate : startDate,
+			endDate : endDate,
+			userName : $('#news_userName').val(),
+		   title : $("#news_title").val(),
+			status : $("#news_status").val()
+		});
+	};
+	
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+
+<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		 &nbsp;
+		<div style="padding: 3px">
+		 &nbsp; 
+		<input type="text" id="news_begindate" class="easyui-datebox" />
+			&nbsp;至
+			<input type="text" id="news_enddate" class="easyui-datebox" />
+		 &nbsp;
+			发帖人：<input id="news_userName" name="userName">
+			&nbsp;&nbsp;
+			标题：<input id="news_title" name="title">
+			&nbsp;&nbsp;
+			<select name="status" id="news_status">
+				<option value="-1">
+					所有&nbsp;
+				</option>
+             	<option value="0">
+					未审核
+				</option>
+				<option value="1">
+					已审核
+				</option>
+			</select>
+			&nbsp;&nbsp;
+			<input type="button" value="查询" onclick="news_search()">
+		</div>
+	</div>
+
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_news" url="fo_getForumByPage.action"
+			title="帖子管理" fitColumns="true" singleSelect="false"
+			collapsible='true'  fit='true' nowrap='false'
+			idField='id' toolbar="#news_tb_menu"   pagination ="true"
+			pageSize = "10"  pageList =" [ 10, 20, 30, 40, 50 ]">
+			<thead>
+				<tr>
+				   <th field="ck" checkbox="true"></th>
+				     <th data-options="field:'userName',align:'center',width:40,sortable:true">
+						发帖人
+					</th>
+					 <th data-options="field:'title',align:'center',width:40,sortable:true">
+						标题
+					</th>
+					  <th data-options="field:'content',align:'center',width:40,sortable:true">
+					 	内容
+					</th>
+					<!--  
+					<th data-options="field:'icon',align:'center',width:40,sortable:true">
+					 	内容
+					</th>
+					-->
+					 <th data-options="field:'createtime',align:'center',width:40,sortable:true">
+						发帖时间
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<div id="news_tb_menu">
+	<a href="#" class="easyui-linkbutton" iconCls="icon-remove"
+		plain="true" onclick="del('fo_deleteNews.action','dg_news')">删除</a>
+	<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+		onclick="edit('news_edit.html','修改帖子','500','600','fo_updateNews.action','dg_news')">修改</a>
+</div>

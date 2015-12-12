@@ -1,0 +1,47 @@
+<!-- 广播 -->
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'center',border:false">
+		<table id="dg_radio" class="easyui-datagrid" title="文字广播管理"
+			data-options="url:'radio_getRadioByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : true,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'添加',
+                                    iconCls:'icon-add',
+                                    handler:function()
+                                    {
+                                      add('radio_add.html','添加','400','600','radio_addRadio.action','dg_radio')
+                                    }},'-',
+                                    {
+                                    text:'删除',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('radio_deleteRadio.action','dg_radio')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					
+					<th data-options="field:'createtime',align:'center',width:15,sortable:true" formatter="formatterstringdate">
+						上传时间
+					</th>
+					<th data-options="field:'word', align:'center', whdth:40">
+						内容
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+</div>

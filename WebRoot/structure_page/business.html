@@ -1,0 +1,131 @@
+<script type="text/javascript">
+operator_search = function()
+{
+	$('#dg_business').datagrid('load', {
+		realName : $('#realName').val(),
+		verify : $('#business_verify').val()
+	});
+};
+business_cancelCheckBox=function(data){
+	
+    if (data.rows.length > 0) {
+        for (var i = 0; i < data.rows.length; i++) {
+            if (data.rows[i].verify==1) {
+            $("input[type='checkbox']")[i + 1].disabled = true;
+  
+            }
+                  }
+               }
+          };
+
+
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		 &nbsp;
+		<div style="padding: 3px">
+			商户姓名：<input id="realName" name="realName">
+			&nbsp;&nbsp;
+			  状态:
+			<select id="business_verify">
+			<option value="-1">所有</option>
+			<option value="0">未审核</option>
+			<option value="1">审核通过</option>
+			<option value="2">审核拒绝</option>
+			</select>
+			<input type="button" value="查询" onclick="operator_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_business" class="easyui-datagrid" title="商户管理"
+			data-options="url:'ba_ getBusinessByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : true,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                onLoadSuccess :business_cancelCheckBox,
+			                  rowStyler:function(index,row){   
+                                  if (row.verify==1){   
+                                     return 'background-color:#9CEEB0;';   
+                                        } 
+                                        else if (row.verify==2){   
+                                     return 'background-color:red;';   
+                                        } 
+                                       },   
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                	{
+                                    text:'修改信息',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('business_modify.html','修改信息','500','600','ba_modifyBusiness.action','dg_business')
+                                    }},'-',
+                                    {
+                                    text:'审核通过',
+                                    iconCls:'icon-ok',
+                                    handler:function()
+                                    {
+                                      audit('ba_auditBusiness.action','dg_business',1)
+                                    }},'-',
+                                    {
+                                    text:'审核拒绝',
+                                    iconCls:'icon-cancel',
+                                    handler:function()
+                                    {
+                                      audit('ba_auditBusiness.action','dg_business',2)
+                                    }},'-',
+                                    {
+                                    text:'删除',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('ba_ deleteBusiness.action','dg_business')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					
+					<th data-options="field:'createtime',align:'center',width:15,sortable:true" formatter="formatterstringdate">
+						申请时间
+					</th>
+					<th data-options="field:'company',align:'center',width:20">
+						商户所属企业
+					</th>
+					<th data-options="field:'realName',align:'center',width:10" >
+						商户真实姓名
+					</th>
+					<th data-options="field:'tel',align:'center',width:15">
+						商户联系方式
+					</th>
+					<th data-options="field:'address',align:'center',width:25" >
+						地址
+					</th>
+					<th data-options="field:'rating',align:'center',width:10" formatter="formatterRating" >
+						等级
+					</th>
+					<th data-options="field:'type',align:'center',width:10" formatter="formatterBussinessType">
+						商户类型
+					</th>
+					<th data-options="field:'verify',align:'center',width:10" formatter="formatterstatus" >
+						状态
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+	 
+	 
+	
+</div>

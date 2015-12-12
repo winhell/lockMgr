@@ -1,0 +1,97 @@
+<script type="text/javascript">
+	resourceOfSoftware_search = function() {
+		$('#dg_resourceOfSoftware').datagrid('reload', {
+			title : $('#resourceOfSoftware_title').val()
+		});
+	};
+
+	$(function() {
+
+	});
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 60px; background: #f4f4f4;">
+		<div style="padding: 6px">
+			&nbsp;
+			&nbsp;&nbsp; 名称:
+			<input id="resourceOfSoftware_title" name="title">
+			&nbsp;&nbsp;
+			<input type="button" value="查询" onclick="resourceOfSoftware_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_resourceOfSoftware" class="easyui-datagrid" title="软件下载管理"
+			data-options="url:'ros_getResourceOfSoftwareByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[{
+                                    text:'添加资源',
+                                    iconCls:'icon-add',
+                                    handler:function(){
+                                    add('resourceOfSoftware_add.html','添加资源','400','650','ros_addResourceOfSoftware.action','dg_resourceOfSoftware')
+                                    }},'-',
+                                    {
+                                    text:'修改信息',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('resourceOfSoftware_edit.html','修改信息','500','600','ros_editResourceOfSoftware.action','dg_resourceOfSoftware')
+                                    }},'-',
+                                    {
+                                    text:'删除资源',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('ros_deleteResourceOfSoftware.action','dg_resourceOfSoftware')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					<th
+						data-options="field:'title',align:'center',width:20,sortable:true">
+						名称
+					</th>
+					<th data-options="field:'resourceAndDataType',align:'center',width:20">
+						类型
+					</th>
+					<th
+						data-options="field:'score',align:'center',width:20,sortable:true">
+						下载分数
+					</th>
+					<th
+						data-options="field:'resDescribe',align:'center',width:20,sortable:true">
+						介绍
+					</th>
+					<th
+						data-options="field:'uploaderName',align:'center',width:20,sortable:true">
+						上传者
+					</th>
+					<th
+						data-options="field:'downloadNum',align:'center',width:20,sortable:true">
+						下载次数
+					</th>
+					<th
+						data-options="field:'createtime',align:'center',width:30,sortable:true"
+						formatter="formatterstringdate">
+						上传时间
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+

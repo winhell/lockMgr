@@ -1,0 +1,164 @@
+<script type="text/javascript">
+user_search = function()
+{
+	/*if(roleName=='景点')
+		{
+		operator_belongId=$("#operator_allscenicinfo").combobox('getValue');
+		serviceproviderId="";
+		}
+	else if(roleName=='服务提供商')
+	 {
+		operator_belongId=$("#operator_allserviceprovider").combobox('getValue');
+		serviceproviderId="";
+	 }
+else if(roleName=='发卡点')
+	{
+	operator_belongId=$("#operator_allissuesite").combobox('getValue');
+	serviceproviderId=$("#operator_allserviceprovider").combobox('getValue');
+	}
+else
+	{
+	serviceproviderId="";
+	}*/
+	$('#dg_user').datagrid('reload', {
+		roleId: $("#user_roleId").combobox('getValue'),
+		account : $('#account').val()
+		//belongId:operator_belongId
+	});
+};
+
+
+$(function() {
+$("#user_roleId").combobox({
+    url: "ura_getAllRoleIdAndComment.action",
+    valueField:'id',   
+    textField:'name',  
+    multiple:false,  
+    panelHeight:'auto',
+    onLoadSuccess: function () { 
+    	var data = $('#user_roleId').combobox('getData');
+        if (data.length > 0) {
+            $('#user_roleId').combobox('select', data[0].id);
+        }
+    }
+});
+
+
+});
+
+
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		 &nbsp;
+		<div style="padding: 3px">
+                <input id="user_roleId" name="operator.roleId" />
+                
+                
+		 &nbsp;&nbsp;
+			账号：<input id="account" name="account">
+			&nbsp;&nbsp;
+			<input type="button" value="查询" onclick="user_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_user" class="easyui-datagrid" title="会员管理"
+			data-options="url:'ua_ getOperatorByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[{
+                                    text:'添加会员',
+                                    iconCls:'icon-add',
+                                    handler:function(){
+                                    add('user_add.html','添加会员','300','600','ua_addOperator.action','dg_user')
+                                    }},'-',
+                                    {
+                                    text:'完善信息',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('user_edit.html','完善信息','500','600','ua_editOperatorAndUser.action','dg_user')
+                                    }},'-',
+                                    {
+                                    text:'删除会员',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('ua_deleteOperator.action','dg_user')
+                                    }},'-',
+                                    {
+                                    text:'查看详情',
+                                    iconCls:'icon-search',
+                                    handler:function()
+                                    {
+                                      searchUser('user_search.html','查看详情','500','600','','dg_user')
+                                    }}
+                                    ]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					<th data-options="field:'account',align:'center',width:20">
+						账号
+					</th>
+					<th data-options="field:'userRoleName',align:'center',width:20" >
+						角色
+					</th>
+					<!-- <th data-options="field:'createtime',align:'center',width:30" formatter="formatterstringdate">
+						添加时间
+					</th> -->
+					<th data-options="field:'address',align:'center',width:30">
+						地址
+					</th>
+					<th data-options="field:'vipTime',align:'center',width:30" formatter="formatterstringdate">
+						会员开通日期
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+<script type="text/javascript">
+function searchUser(hrefurl,title,height,width,handlerurl,datagridid) {
+	var r = $("#"+datagridid).datagrid("getChecked");
+	if (r.length < 1) {
+		$.show_warning("错误", "请选择一条记录");
+		return;
+	}
+	if (r.length > 1) {
+		$.show_warning("错误", "一次只能查看一条记录");
+		$("#"+datagridid).datagrid('clearSelections').datagrid(
+				'clearChecked');
+		return;
+	}
+	$("<div/>")
+			.dialog(
+					{
+						href : hrefurl,
+						title : title,
+						height : height,
+						width :width,
+						modal : true,
+						iconCls : "icon-search",
+						onClose : function() {
+							$(this).dialog('destroy');
+						},
+						onLoad : function() {
+							loadForm("#form_edit",r[0]);
+						}
+					});
+
+}
+</script>	
+</div>

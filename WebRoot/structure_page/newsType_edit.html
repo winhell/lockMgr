@@ -1,0 +1,24 @@
+<script type="text/javascript">
+$(function() {
+	$('#comment').xheditor({html5Upload:false,upImgUrl : 'upload_uploadOfXheditor.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+});
+
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+	<form id="form_edit" method="post">
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>请输入您需要修改的类型：</td>
+				<td>
+					<input id="name" name="newstype.name" class="easyui-validatebox" data-options="required:true" />
+					
+					<input id="status" name="newstype.status" type="hidden" />
+					<input id="type" name="newstype.type" type="hidden" />
+				</td>
+			</tr>
+		</table>
+		<textarea id="comment" name="newstype.comment" rows="12" title="类型介绍" cols="80" style="width: 100%">
+	    </textarea>
+	</form>
+</div>

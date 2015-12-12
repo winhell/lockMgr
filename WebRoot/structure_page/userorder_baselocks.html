@@ -1,0 +1,184 @@
+<script type="text/javascript">
+	function order(handlerurl,datagridid) {
+		var rows = $("#"+datagridid).datagrid("getChecked");
+		if (rows.length < 1) {
+			$.show_warning("错误", "请选择要操作的订单");
+			return;
+		}
+		$.messager.confirm('提示！', '确定执行这' + rows.length + '条订单?', function(r) {
+			if (r) {
+				para = {};
+				para.action = "order";
+				para.timespan = new Date().getTime();
+				para.id = "";
+				$.each(rows, function(i, row) {
+					para.id = para.id + "'" + row.id + "',";
+				});
+				$.ajax({
+					url : handlerurl,
+					data : para,
+					type : "POST",
+					dataType : "text",
+					success : function(result) {
+						dealAjaxResult(result,
+								function(r) {
+									$.show_warning("提示", "操作成功");
+									$("#"+datagridid).datagrid("reload")
+											.datagrid('clearSelections')
+											.datagrid('clearChecked');
+									;
+								});
+					}
+				});
+			}
+		});
+	}
+
+	lo_search = function() {
+		var startDate = $("#lo_begindate").datebox('getValue');
+		var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+		var endDate = $("#lo_enddate").datebox('getValue');
+		var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+		if (end < start) {
+			alert("结束日期不能小于开始日期");
+			return false;
+		}
+		if (endDate.length <= 0 || startDate.length <= 0) {
+			alert("日期不能为空");
+			return false;
+		}
+		$('#dg_lo').datagrid('load', {
+			beginDate : startDate,
+			endDate : endDate,
+			userName : $('#userName').val(),
+		});
+	};
+	
+	var baselocks_search = function() {
+		$('#dg_lo').datagrid('reload', {
+			//locksId : ,
+			beginDate : $("#lo_begindate").datetimebox("getValue"),
+			endDate : $("#lo_enddate").datetimebox("getValue"),
+			status : $("#status_baselocks").val()
+		});
+	};
+
+	$(function() {
+		getSession(function f(r) {
+			var r = eval("(" + r + ")");
+			if (r != null) {
+				if (r.roleName == "admin") {
+				
+				};
+			} else {
+				$.relogin();
+			}
+		});
+		
+		$("#lo_begindate").datetimebox({
+			value : getBeforeSevenDateyy_mm_dd(),
+			formatter : formaterdate,
+			parser : parserdate
+		});
+		$("#lo_enddate").datetimebox({
+			value : getNextDateyy_mm_dd(),
+			formatter : formaterdate,
+			parser : parserdate
+		});
+		
+	});
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		&nbsp;
+		<div style="padding: 3px">
+			<input type="text" id="lo_begindate" class="easyui-datebox" />
+			&nbsp;至 
+			<input type="text" id="lo_enddate" class="easyui-datebox" />
+			&nbsp;&nbsp; 
+			<!-- 
+			锁名:<input id="locksName" type="text" /> &nbsp;&nbsp; 
+			用户名:<input id="userName" type="text" /> &nbsp;&nbsp; 
+			-->
+			<select id="status_baselocks" name="">
+				<option value=1>待发货</option>
+				<option value=2>已发货</option>
+				<option value=-1>已退货</option>
+			</select>
+			<input type="button" value="查询" onclick="baselocks_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_lo" class="easyui-datagrid" title="团购订单管理"
+			data-options="url:'uot_getLOByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'发货',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      order('uot_updateOrderDelivery.action','dg_lo')
+                                    }},'-',
+                                    {
+                                    text:'退货',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      order('uot_updateOrderReturn.action','dg_lo')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true"></th>
+
+					<th
+						data-options="field:'userOrderId',align:'center',width:15">
+						订单号</th>
+					<th 
+						data-options="field:'userName',align:'center',width:15">
+						用户名</th>
+					<th
+						data-options="field:'createtime',align:'center',width:15"
+						formatter="formatterstringdate">购买时间</th>
+					<th
+						data-options="field:'locksName',align:'center',width:15">
+						锁名称</th>
+					<th
+						data-options="field:'locksType',align:'center',width:15">
+						锁类型</th>
+					<th
+						data-options="field:'number',align:'center',width:15">
+						数量</th>
+					<th
+						data-options="field:'price',align:'center',width:15">
+						价格</th>
+					<th
+						data-options="field:'consignee',align:'center',width:15">
+						收货人姓名</th>
+					<th
+						data-options="field:'consigneePhone',align:'center',width:15">
+						收货人电话</th>
+					<th
+						data-options="field:'deliveryAddress',align:'center',width:15">
+						收货人地址</th>
+					<th
+						data-options="field:'statusName',align:'center',width:15">
+						订单状态</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+</div>

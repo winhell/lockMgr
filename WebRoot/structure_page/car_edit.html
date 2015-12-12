@@ -1,0 +1,94 @@
+<script type="text/javascript">
+$(function() {
+	car_edit_init();
+	$('#comment').xheditor({html5Upload:false,upImgUrl:'upload_upload.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+
+});
+
+var g_AjxTempDir = "../file/img/";
+//var id = "";
+function car_edit_init() {
+	//初始化图片上传  
+	var btnImg = document.getElementById("car_edit_btnUploadImg");
+	var img = document.getElementById("show_image");
+	var car_edit_hidImgName = document.getElementById("car_edit_hidImgName");
+	g_AjxUploadImg(btnImg, img, car_edit_hidImgName);
+}
+
+//图片上传  
+function g_AjxUploadImg(btn, img, hidPut) {
+	var button = btn, interval;
+	new AjaxUpload(button, {
+		action : 'upload_uploadImg.action',
+		data : {
+			//id : id
+		},
+		name : 'filedata',
+		onSubmit : function(file, ext) {
+			//id = $("#id").val();
+			if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF)$/.test(ext))) {
+				alert("您上传的图片格式不对，请重新选择！");
+				return false;
+			}
+		},
+		onComplete : function(file, response) {
+			var response = eval("(" + response + ")");
+			flagValue = response;
+			if (flagValue == "1") {
+				alert("您上传的图片格式不对，请重新选择！");
+			} else if (flagValue == "2") {
+				alert("您上传的图片大于2M，请重新选择！");
+			} else if (flagValue == "3") {
+				alert("图片上传失败！");
+			} else {
+				hidPut.value = response;
+				img.src = g_AjxTempDir + response+"?_"+new Date().getTime();
+				$("#image").val(response);
+			}
+		}
+	});
+}
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+	<form id="form_edit" method="post">
+	<input type="hidden" name="car.status" id="status">
+		<!-- <input type="hidden" name="car.image" class="image" id="image" />
+		<div class="uploadImg" align="center">
+			<img id="show_image"  src="" height="200" width="160" />
+		</div>
+		<br>
+		<div class="uploadImg" align="center">
+				<input type="hidden" id="car_edit_hidImgName" />
+				<input type="button" id="car_edit_btnUploadImg" value="图片上传" />
+		</div> -->
+		
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>车系：</td>
+				<td>
+				<select id="carCountry" name="car.carCountry">
+					<option>所有车系</option>
+					<option>欧洲车系</option>
+					<option>美洲车系</option>
+					<option>日韩车系</option>
+					<option>国产车系</option>
+				</select>
+				</td>
+				<td>品牌：</td>
+				<td>
+					<input id="carName" name="car.carName" class="easyui-validatebox" data-options="required:true" />
+				</td>
+			</tr>
+			<!-- <tr>
+				<td>型号：</td>
+				<td><input id="carType" name="car.carType" class="easyui-validatebox" data-options="required:true" /></td>
+				<td>商标：</td>
+				<td><input id="carLogo" name="car.carLogo" class="easyui-validatebox" data-options="required:true" />
+				</td>
+			</tr> -->
+		</table>
+	
+	</form>
+
+</div>

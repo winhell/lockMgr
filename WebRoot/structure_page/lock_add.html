@@ -1,0 +1,130 @@
+<script type="text/javascript">
+$(function() {
+	
+	getSession(function f(r) {
+		var r = eval("(" + r + ")");
+		if (r!=null) {
+			if (r.roleName == "admin") {
+				//$('#dg_issuesitebusiness').datagrid('hideColumn','scenicName');
+				$("#lock_add_div1").attr("style", "display: inline");
+				$("#lock_add_businessId").combobox({
+				    url: "ba_getBusinessIdAndComment.action",
+				    valueField:'id',   
+				    textField:'name',  
+				    multiple:false,  
+				    panelHeight:'300',
+				    onLoadSuccess: function () { 
+				      var data = $('#lock_add_businessId').combobox('getData');
+				      if (data.length > 0) {
+				    	  $('#lock_add_businessId').combobox('select', data[0].id);
+				        }
+				    }
+				});
+				};
+		}
+			else {
+				$.relogin();
+			}
+	});
+	lock_add_init();
+	
+	$('#comment').xheditor({html5Upload:false,upImgUrl : 'upload_uploadOfXheditor.action?type=img',upImgExt:'jpg,jpeg,gif,png'});
+
+});
+
+var g_AjxTempDir = "../file/img/";
+//var id = "";
+function lock_add_init() {
+	//初始化图片上传  
+	var btnImg = document.getElementById("lock_add_btnUploadImg");
+	var img = document.getElementById("show_image");
+	var lock_add_hidImgName = document.getElementById("lock_add_hidImgName");
+	g_AjxUploadImg(btnImg, img, lock_add_hidImgName);
+}
+//图片上传  
+function g_AjxUploadImg(btn, img, hidPut) {
+	var button = btn, interval;
+	new AjaxUpload(button, {
+		action : 'upload_uploadImg.action',
+		data : {
+			//id : id
+		},
+		name : 'filedata',
+		onSubmit : function(file, ext) {
+			//id = $("#id").val();
+			if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF)$/.test(ext))) {
+				alert("您上传的图片格式不对，请重新选择！");
+				return false;
+			}
+		},
+		onComplete : function(file, response) {
+			var response = eval("(" + response + ")");
+			flagValue = response;
+			if (flagValue == "1") {
+				alert("您上传的图片格式不对，请重新选择！");
+			} else if (flagValue == "2") {
+				alert("您上传的图片大于2M，请重新选择！");
+			} else if (flagValue == "3") {
+				alert("图片上传失败！");
+			} else {
+				hidPut.value = response;
+				img.src = g_AjxTempDir + response+"?_"+new Date().getTime();
+				$("#image").val(response);
+			}
+		}
+	});
+}
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+
+	<form id="form_add" method="post">
+		<input type="hidden" name="lock.image" class="image" id="image" />
+
+		<div class="uploadImg" align="center">
+			<img id="show_image" src="" height="200" width="160" />
+		</div>
+		<br>
+		<div class="uploadImg" align="center">
+			<input type="hidden" id="lock_add_hidImgName" /> 
+			<input type="button" id="lock_add_btnUploadImg" value="图片上传" />
+		</div>
+
+
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td colspan="2">
+					<div id="lock_add_div1" style="display: none;" align="center">
+						商铺： <input id="lock_add_businessId" name="lock.businessId" />
+					</div></td>
+			</tr>
+			<tr>
+				<td>产品名称：</td>
+				<td><input id="name" name="lock.name" type="text" /></td>
+				<td>型号：</td>
+				<td><input id="type" name="lock.type"
+					class="easyui-validatebox" data-options="required:true" /></td>
+
+			</tr>
+
+			<tr>
+				<td>产地：</td>
+				<td><input type="text" name="lock.origin" id="origin" /></td>
+				<td>原始价格：</td>
+				<td><input type="text" name="lock.oprice" id="oprice">
+				</td>
+			</tr>
+			<tr>
+
+				<td>出售价格：</td>
+				<td><input type="text" id="price" name="lock.price" /></td>
+			</TR>
+
+		</table>
+		<textarea id="comment" name="lock.comment" rows="12" title="  产品描述"
+			cols="80" style="width: 100%">
+	         </textarea>
+
+	</form>
+</div>
+

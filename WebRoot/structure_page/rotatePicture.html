@@ -1,0 +1,81 @@
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<!-- <div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		 &nbsp;
+		<div style="padding: 3px">
+			  状态:
+			<select id="verifyBusiness_verify">
+			<option value="-1">所有</option>
+			<option value="0">未审核</option>
+			<option value="1">审核通过</option>
+			<option value="2">审核拒绝</option>
+			</select>
+			<input type="button" value="查询" onclick="operator_search()">
+		</div>
+	</div> -->
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_rotatePicture" class="easyui-datagrid" title="滚动图片管理"
+			data-options="url:'rp_getrotatePicture.action?typeArray=1&typeArray=2',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : true,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  rowStyler:function(index,row){   
+                                  if (row.type==1){   
+                                     return 'background-color:#9CEEB0;';   
+                                        } 
+                                        else if (row.type==2){   
+                                     return 'background-color:#1592FE;';   
+                                        } 
+                                       },
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'添加图片',
+                                    iconCls:'icon-add',
+                                    handler:function()
+                                    {
+                                      add('rotatePicture_add.html','添加图片','400','600','rp_addRotatePicture.action','dg_rotatePicture')
+                                    }},'-',
+                                    {
+                                    text:'修改图片',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('rotatePicture_edit.html','修改图片','400','600','rp_editRotatePicture.action','dg_rotatePicture')
+                                    }},'-',
+                                    {
+                                    text:'删除图片',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('rp_deleteRotatePicture.action','dg_rotatePicture')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					
+					<th data-options="field:'createtime',align:'center',width:15,sortable:true" formatter="formatterstringdate">
+						上传时间
+					</th>
+					<th data-options="field:'typeName',align:'center',width:10" >
+						图片类型
+					</th>
+					<th id="imageIdCard" data-options="field:'address', align:'center', width:15" formatter="formatterImage">
+						图片
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+</div>

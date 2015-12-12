@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name></display-name>
+  <welcome-file-list>
+    <welcome-file>login.html</welcome-file>
+  </welcome-file-list>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>/WEB-INF/classes/applicationContext.xml</param-value>
+  </context-param>
+  <filter>
+    <filter-name>struts2</filter-name>
+    <filter-class>
+  		org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter
+  	</filter-class>
+    <init-param>
+      <param-name>actionPackages</param-name>
+      <param-value>com.logo.group.webapp.action,com.logo.group.harvest.action</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>struts2</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+  
+  <servlet>
+  	<servlet-name>download</servlet-name>
+  	<servlet-class>com.lockMgr.test.FileDownServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>download</servlet-name>
+  	<url-pattern>/download</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>transfer</servlet-name>
+  	<servlet-class>com.alipay.TransferServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>transfer</servlet-name>
+  	<url-pattern>/transfer</url-pattern>
+  </servlet-mapping>
+</web-app>

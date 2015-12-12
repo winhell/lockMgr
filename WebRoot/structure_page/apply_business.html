@@ -1,0 +1,109 @@
+<script type="text/javascript">
+	$(function() {
+		//alter($("#dg_ab toolbar text").val());
+		
+	});
+	//add('apply_businesst.html','提现申请',350,600,'wd_apply.action');
+	
+	var applyBusiness_search = function() {
+		$('#dg_ab').datagrid('reload', {
+			beginDate : $("#ab_begindate").datetimebox("getValue"),
+			endDate : $("#ab_enddate").datetimebox("getValue"),
+			status : $("#ab_status").val()
+		});
+	};
+	
+	applyBusiness_search = function() {
+		var startDate = $("#ab_begindate").datebox('getValue');
+		var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+		var endDate = $("#ab_enddate").datebox('getValue');
+		var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+		if (end < start) {
+			alert("结束日期不能小于开始日期");
+			return false;
+		}
+		$('#dg_ab').datagrid('load', {
+			beginDate : startDate,
+			endDate : endDate,
+			status : $("#ab_status").val()
+		});
+	};
+	
+
+</script>
+
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'" 
+		style="height: 80px; background: #f4f4f4;">
+		&nbsp;
+		<div style="padding: 3px">
+			<input type="text" id="ab_begindate" class="easyui-datebox" />
+			&nbsp;至 
+			<input type="text" id="ab_enddate" class="easyui-datebox" />
+			&nbsp;&nbsp; 
+			<select id="ab_status">
+				<option value=0>全部</option>
+				<option value=1>待审核</option>
+				<option value=2>审核通过</option>
+				<option value=-1>审核拒绝</option>
+			</select>
+			<input type="button" value="查询" onclick="applyBusiness_search()">
+		</div>
+	</div>
+	
+	<div data-options="region:'center',border:false">
+		<table id="dg_ab" class="easyui-datagrid" title="商户提现管理"
+			data-options="url:'wd_getWithdrawByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'申请提现',
+                                    iconCls:'icon-add',
+                                    handler:function()
+                                    {
+                                    	add('apply_business_add.html','申请提现','300','600','wd_apply.action','dg_ab')
+                                    }},'-',
+                                    {
+                                    text:'撤销提现',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                    	del('wd_cancelApply.action','dg_ab')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true"></th>
+
+					<th data-options="field:'businessName',align:'center',width:15">
+						商户名
+					</th>
+					<th data-options="field:'applyTime',align:'center',width:15" formatter="formatterstringdate">
+						申请时间
+					</th>
+					<th data-options="field:'amount',align:'center',width:15">
+						提现金额
+					</th>
+					<th data-options="field:'alipayAccount',align:'center',width:15">
+						账号
+					</th>
+					<th data-options="field:'accountName',align:'center',width:15">
+						姓名
+					</th>
+					<th data-options="field:'status',align:'center',width:15" formatter="formatterApplyStatus">
+						状态
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+</div>

@@ -1,0 +1,117 @@
+<script type="text/javascript">
+	resource_search = function() {
+		$('#dg_car').datagrid('reload', {
+			carCountry : $('#car_carCountry').val()
+			/* carName : $("#car_carName").combobox('getValue'),
+			carType : $("#car_carType").combobox('getValue') */
+		});
+	};
+	
+	$(function() {
+
+	});
+
+</script>
+
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 60px; background: #f4f4f4;">
+		<div style="padding: 6px">
+			&nbsp;
+
+			<select id="car_carCountry" name="carCountry" onchange="resource_search();" >
+				<option value="">
+					所有车系&nbsp;
+				</option>
+				<option value="欧洲车系">
+					欧洲车系
+				</option>
+				<option value="美洲车系">
+					美洲车系
+				</option>
+				<option value="日韩车系">
+					日韩车系
+				</option>
+				<option value="国产车系">
+					国产车系
+				</option>
+			</select>
+			<!-- 
+			&nbsp;&nbsp;
+			
+			<input id="car_carName" name="carName" class="easyui-combobox" 
+						data-options=" url:'resa_getAllCarNameAndId.action',
+                    	valueField:'name',  
+                   		textField:'name',  
+                    	multiple:false,
+                    	panelHeight:'auto' ">
+            &nbsp;&nbsp;
+            <input id="car_carType" name="carType" class="easyui-combobox" 
+						data-options=" url:'resa_getAllCarTypeAndId.action',
+                    	valueField:'name',  
+                   		textField:'name',  
+                    	multiple:false,
+                    	panelHeight:'auto' ">
+                    	-->
+			&nbsp;&nbsp;
+			<!--  
+			<input type="button" value="查询" onclick="resource_search()">
+			-->
+		</div>
+	</div>
+	
+	<div data-options="region:'center',border:false">
+		<table id="dg_car" class="easyui-datagrid" title="车类管理"
+			data-options="url:'resa_getCarByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[{
+                                    text:'添加车类',
+                                    iconCls:'icon-add',
+                                    handler:function(){
+                                    add('car_add.html','添加车类','400','650','resa_addCar.action','dg_car')
+                                    }},'-',
+                                    {
+                                    text:'修改车类',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('car_edit.html','修改车类','500','600','resa_editCar.action','dg_car')
+                                    }},'-',
+                                    {
+                                    text:'删除车类',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('resa_cancelCar.action','dg_car')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					<th data-options="field:'carName',align:'center',width:20,sortable:true">
+						名称
+					</th>
+					<!-- <th data-options="field:'carType',align:'center',width:20">
+						型号
+					</th>
+					<th data-options="field:'carLogo',align:'center',width:20,sortable:true">
+						LOGO
+					</th> -->
+					<th data-options="field:'carCountry',align:'center',width:20,sortable:true">
+						所属车系
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>

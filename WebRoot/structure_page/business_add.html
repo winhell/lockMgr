@@ -1,0 +1,142 @@
+<script type="text/javascript">
+	$(function() {
+
+		business_add_init();
+		$('#comment').xheditor({
+			html5Upload : false,
+			upImgUrl : 'upload_uploadOfXheditor.action?type=img',
+			upImgExt : 'jpg,jpeg,gif,png'
+		});
+
+	});
+
+	var g_AjxTempDir = "../file/img/";
+	//var id = "";
+	function business_add_init() {
+		//初始化图片上传  
+		var btnImg = document.getElementById("business_add_btnUploadImg");
+		var img = document.getElementById("show_image");
+		var business_add_hidImgName = document
+				.getElementById("business_add_hidImgName");
+		g_AjxUploadImg(btnImg, img, business_add_hidImgName);
+	}
+	//图片上传  
+	function g_AjxUploadImg(btn, img, hidPut) {
+		var button = btn, interval;
+		new AjaxUpload(button, {
+			action : 'upload_uploadImg.action',
+			data : {
+			//id : id
+			},
+			name : 'filedata',
+			onSubmit : function(file, ext) {
+				//id = $("#id").val();
+				if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF)$/.test(ext))) {
+					alert("您上传的图片格式不对，请重新选择！");
+					return false;
+				}
+			},
+			onComplete : function(file, response) {
+				var response = eval("(" + response + ")");
+				flagValue = response;
+				if (flagValue == "1") {
+					alert("您上传的图片格式不对，请重新选择！");
+				} else if (flagValue == "2") {
+					alert("您上传的图片大于2M，请重新选择！");
+				} else if (flagValue == "3") {
+					alert("图片上传失败！");
+				} else {
+					hidPut.value = response;
+					img.src = g_AjxTempDir + response + "?_"
+							+ new Date().getTime();
+					$("#image").val(response);
+				}
+			}
+		});
+	}
+</script>
+
+<div style="padding: 15px; overflow: hidden">
+
+	<form id="form_add" method="post">
+		<input type="hidden" name="image" class="image" id="image" />
+
+		<div class="uploadImg" align="center">
+			<img id="show_image" src="" height="200" width="160" />
+		</div>
+		<br>
+		<div class="uploadImg" align="center">
+			<input type="hidden" id="business_add_hidImgName" /> 
+			<input type="button" id="business_add_btnUploadImg" value="图片上传" />
+		</div>
+
+		<!-- 隐藏域(取代下面table中注释的) -->
+		<input type="hidden" id="lng" name="pointY" class="easyui-validatebox" data-options="required:true">
+		<input type="hidden" id="lat" name="pointX"  class="easyui-validatebox" data-options="required:true">
+
+		<table class="tableForm" style="width: 100%">
+			<tr>
+				<td>商户(企业)名称： <input id="company" name="company"
+				 class="easyui-validatebox" data-options="required:true" /></td>
+				<td>负&nbsp;责&nbsp;人&nbsp;：&nbsp;<input id="realName" name="realName" type="text"
+				 class="easyui-validatebox" data-options="required:true" />
+				</td>
+			</tr>
+			<!-- <tr>
+				<td>坐&nbsp;标&nbsp;&nbsp;(经度)&nbsp;：&nbsp;<input type="text" id="lng" 
+				 name="pointY" class="easyui-validatebox" data-options="required:true">
+				</td>
+				<td>坐标(纬度)：<input type="text" id="lat" name="pointX"
+				 class="easyui-validatebox" data-options="required:true">
+				</td>
+			</tr> -->
+			<tr>
+				<td>地址：
+					<input id="addressOne" name="addressOne" 
+						 class="easyui-validatebox" data-options="required:true" />省
+				</td>
+				<td>
+					<input id="addressTwo" name="addressTwo"
+					 	class="easyui-validatebox" data-options="required:true" />市
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input id="addressThree" name="addressThree"
+					 	class="easyui-validatebox" data-options="required:true" />区
+				</td>
+				<td>
+					<input id="addressFour" name="addressFour" 
+						 class="easyui-validatebox" data-options="required:true" />街号
+				</td>
+			</tr>
+			<tr>
+				<td>电&nbsp;话&nbsp;:<input id="tel" name="tel" class="easyui-validatebox"
+					data-options="required:true" />
+				</td>
+				<td>
+					商户类型：
+					<input id="type" type="radio" name="type" value="0" checked="checked" />批发商
+					<input id="type" type="radio" name="type" value="1" />零售商
+				</td>
+				
+				<!-- 
+				<td>
+					优先级：
+					<select name="b_a_rating">
+						<option value="0">普通</option>
+						<option value="1">优先</option>
+						<option value="2">特级</option>
+					</select>
+				</td>
+				 -->
+			</tr>
+
+		</table>
+		<textarea id="comment" name="comment" rows="12" title=" 商家描述"
+			cols="80" style="width: 100%">
+	         </textarea>
+
+	</form>
+</div>
+

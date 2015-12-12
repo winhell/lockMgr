@@ -1,0 +1,86 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:task="http://www.springframework.org/schema/task"  
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+           http://www.springframework.org/schema/tx  
+           http://www.springframework.org/schema/tx/spring-tx-3.0.xsd    
+           http://www.springframework.org/schema/aop  
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+            http://www.springframework.org/schema/task     
+    http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+    
+    <bean id="newsService" class="com.lockMgr.service.NewsService"
+		autowire="byName"></bean>
+    <bean id="shopService" class="com.lockMgr.service.ShopService"
+		autowire="byName"></bean>
+	<bean id="viewhistoryService" class="com.lockMgr.service.ViewhistoryService"
+		autowire="byName"></bean>
+	<bean id="newstypeService" class="com.lockMgr.service.NewstypeService"
+		autowire="byName"></bean>
+	<bean id="collectService" class="com.lockMgr.service.CollectService"
+		autowire="byName"></bean>
+	<bean id="userorderService" class="com.lockMgr.service.UserorderService"
+		autowire="byName"></bean>
+	<bean id="userService" class="com.lockMgr.service.UserService"
+		autowire="byName"></bean>
+	<bean id="gblService" class="com.lockMgr.service.GroupbuyLocksService"
+		autowire="byName"></bean>
+	<bean id="carService" class="com.lockMgr.service.CarService"
+		autowire="byName"></bean>
+	<bean id="resourceService" class="com.lockMgr.service.ResourceService"
+		autowire="byName"></bean>
+	<bean id="gbService" class="com.lockMgr.service.GroupbuyLocksService" 
+		autowire="byName"></bean>
+	<bean id="uotService" class="com.lockMgr.service.UserordertService" 
+		autowire="byName"></bean>
+	<bean id="carLogoService" class="com.lockMgr.service.CarLogoService" 
+		autowire="byName"></bean>
+	<bean id="verifyBusinessService" class="com.lockMgr.service.VerifyBusinessService" 
+		autowire="byName"></bean>
+	<bean id="withdrawService" class="com.lockMgr.service.WithdrawService" 
+		autowire="byName"></bean>
+	<bean id="rotatePictureService" class="com.lockMgr.service.RotatePictureService" 
+		autowire="byName"></bean>
+	<bean id="checkNumService" class="com.lockMgr.service.CheckNumService" 
+		autowire="byName"></bean>
+	<bean id="radioService" class="com.lockMgr.service.RadioService" 
+		autowire="byName"></bean>
+	<bean id="resourceOfSoftwareService" class="com.lockMgr.service.ResourceOfSoftwareService" 
+		autowire="byName"></bean>
+	<bean id="businessoflifeserviceService" class="com.lockMgr.service.BusinessoflifeserviceService" 
+		autowire="byName"></bean>
+	<bean id="vipService" class="com.lockMgr.service.VipService"
+		autowire="byName"></bean>
+
+
+	<bean id="downloadAction" class="com.lockMgr.controller.DownloadAction"
+		autowire="byName" scope="prototype"></bean>
+	<bean id="userAction" class="com.lockMgr.controller.UserAction"
+		autowire="byName" scope="prototype"></bean>
+	<bean id="shopAction" class="com.lockMgr.controller.ShopAction"
+		autowire="byName" scope="prototype"></bean>
+	<bean id="newsAction" class="com.lockMgr.controller.NewsAction"
+		autowire="byName" scope="prototype"></bean>
+	<bean id="groupbuyAction" class="com.lockMgr.controller.GroupbuyAction" 
+		autowire="byName" scope="prototype"></bean>
+	<bean id="resourceAction" class="com.lockMgr.controller.ResourceAction" 
+		autowire="byName" scope="prototype"></bean>
+	<bean id="uotAction" class="com.lockMgr.controller.UserOrderTAction" 
+		autowire="byName" scope="prototype"></bean>
+	<bean id="withdrawAction" class="com.lockMgr.controller.WithdrawAction" 
+		autowire="byName" scope="prototype"></bean>
+	<bean id="rotatePictureAction" class="com.lockMgr.controller.RotatePictureAction" 
+		autowire="byName" scope="prototype"></bean>
+	<bean id="getUserSessionAction" class="com.lockMgr.controller.GetSession"
+		autowire="byName" scope="prototype"></bean>
+	<bean id="mailAction" class="com.lockMgr.controller.MailAction" 
+		autowire="byName" scope="prototype"></bean>
+	<bean id="radioAction" class="com.lockMgr.controller.RadioAction" 
+		autowire="byName" scope="prototype"></bean>
+	<bean id="resourceOfSoftwareAction" class="com.lockMgr.controller.ResourceOfSoftwareAction"
+		autowire="byName" scope="prototype"></bean>
+	<bean id="businessoflifeserviceAction" class="com.lockMgr.controller.BusinessoflifeserviceAction" 
+		autowire="byName" scope="prototype"></bean>
+</beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Struts2Diagram version="2.0">
+  <package name="login" location="10,604" size="460,211">
+    <action name="getValidateCode" location="15,24" size="150,40" />
+    <action name="getSession" location="260,24" size="150,40" />
+    <action name="oa_*" location="15,164" size="150,40" />
+    <action name="downloadRecord" location="260,163" size="150,41">
+      <result name="success" />
+    </action>
+  </package>
+  <package name="lyy" location="10,10" size="460,490">
+    <action name="ra_*" location="15,23" size="150,40" />
+    <action name="ma_*" location="260,23" size="150,40" />
+    <action name="sa_*" location="15,163" size="150,40" />
+    <action name="spa_*" location="260,163" size="150,40" />
+    <action name="ta_*" location="15,303" size="150,40" />
+    <action name="is_*" location="260,303" size="150,40" />
+    <action name="pda_*" location="15,443" size="150,40" />
+    <action name="bra_*" location="260,443" size="150,40" />
+    <action name="oba_*" location="0,0" size="0,0" />
+    <action name="spba_*" location="0,0" size="0,0" />
+    <action name="iba_*" location="0,0" size="0,0" />
+  </package>
+</Struts2Diagram>
+

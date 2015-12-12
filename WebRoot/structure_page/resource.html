@@ -1,0 +1,130 @@
+<script type="text/javascript">
+	resource_search = function() {
+		$('#dg_resource').datagrid('reload', {
+			type : $('#resource_type').val(),
+			title : $('#resource_title').val(),
+			rank : $('#resource_rank').val()
+		});
+	};
+
+	$(function() {
+
+	});
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 60px; background: #f4f4f4;">
+		<div style="padding: 6px">
+			&nbsp;
+			<!-- 
+			<select name="type" id="resource_type">
+				<option value="-1">
+					所有类型&nbsp;
+				</option>
+				<option value="0">
+					0
+				</option>
+				<option value="1">
+					1
+				</option>
+			</select>
+			&nbsp;&nbsp;
+			<select name="rank" id="resource_rank">
+				<option value="-1">
+					所有等级&nbsp;
+				</option>
+				<option value="0">
+					0
+				</option>
+				<option value="1">
+					1
+				</option>
+			</select>
+			 -->
+			&nbsp;&nbsp; 名称：
+			<input id="resource_title" name="title">
+			&nbsp;&nbsp;
+			<input type="button" value="查询" onclick="resource_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_resource" class="easyui-datagrid" title="资源管理"
+			data-options="url:'resa_getResourceByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[{
+                                    text:'添加资源',
+                                    iconCls:'icon-add',
+                                    handler:function(){
+                                    add('resource_add.html','添加资源','400','650','resa_addResource.action','dg_resource')
+                                    }},'-',
+                                    {
+                                    text:'修改信息',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('resource_edit.html','修改信息','500','600','resa_editResource.action','dg_resource')
+                                    }},'-',
+                                    {
+                                    text:'删除资源',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('resa_deleteResource.action','dg_resource')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					<th
+						data-options="field:'title',align:'center',width:20,sortable:true">
+						名称
+					</th>
+					<th data-options="field:'resourceAndDataType',align:'center',width:20">
+						类型
+					</th>
+					<th
+						data-options="field:'score',align:'center',width:20,sortable:true">
+						下载分数
+					</th>
+					<th
+						data-options="field:'resDescribe',align:'center',width:20,sortable:true">
+						介绍
+					</th>
+					<!--<th data-options="field:'comment',align:'center',width:20" >
+						产品描述
+					</th>
+					
+					-->
+					<th
+						data-options="field:'uploaderName',align:'center',width:20,sortable:true">
+						上传者
+					</th>
+
+					<th
+						data-options="field:'downloadNum',align:'center',width:20,sortable:true">
+						下载次数
+					</th>
+					<th
+						data-options="field:'createtime',align:'center',width:30,sortable:true"
+						formatter="formatterstringdate">
+						上传时间
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+

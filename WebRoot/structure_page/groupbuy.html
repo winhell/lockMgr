@@ -1,0 +1,177 @@
+<script type="text/javascript">
+lock_search = function()
+{
+	$('#dg_gblock').datagrid('reload', {
+		businessId: $("#gb_businessId").combobox('getValue'),
+		locksId: $("#gb_locksId").combobox('getValue'),
+		type : $('#gb_type').val(),
+		name : $('#gb_name').val(),
+		origin : $('#gb_origin').val()
+	});
+};
+
+
+$(function() {
+	getSession(function f(r) {
+		var r = eval("(" + r + ")");
+		if (r!=null) {
+			if (r.roleName == "admin") {
+				//$('#dg_issuesitebusiness').datagrid('hideColumn','scenicName');
+				$("#gb_div1").attr("style", "display: inline");
+				$("#gb_businessId").combobox({
+				    url: "ba_getAllBusinessIdAndComment.action",
+				    valueField:'id',   
+				    textField:'name',  
+				    multiple:false,  
+				    panelHeight:'300',
+				    onLoadSuccess: function () { 
+				    	var data = $('#gb_businessId').combobox('getData');
+				        if (data.length > 0) {
+				            $('#gb_businessId').combobox('select', data[0].id);
+				        }
+				    }
+				});
+				$("#gb_div2").attr("style", "display: inline");
+				$("#gb_locksId").combobox({
+					url: "la_getAllLocksIdAndName.action",
+					valueField:'id',
+				    textField:'name',
+				    multiple:false,
+				    panelHeight:'300',
+				    onLoadSuccess: function () {
+				    	var data = $('#gb_locksId').combobox('getData');
+				        if (data.length > 0) {
+				            $('#gb_locksId').combobox('select', data[0].id);
+				        }
+				    }
+				});
+				/*
+				//gb_businessIdAndName
+				$("#gb_businessIdAndName").combobox({
+					url:"",
+					valueField: "id",
+					textField: "name",
+					multiple: false,  
+				    panelHeight: "300",
+				    onLoadSuccess: function() {
+				    	var data = $("#gb_businessIdAndName").combobox("getData");
+				    	if(data.length > 0) {
+				    		$("#gb_businessIdAndName").combobox("select", data[0].id);
+				    	}
+				    }
+				});
+				//gb_locksIdAndName
+				$("#gb_locksIdAndName").combobox({
+					url:"",
+					valueField: "id",
+					textField: "name",
+					multiple: false,  
+				    panelHeight: "300",
+				    onLoadSuccess: function() {
+				    	var data = $("#gb_locksIdAndName").combobox("getData");
+				    	if(data.length > 0) {
+				    		$("#gb_locksIdAndName").combobox("select", data[0].id);
+				    	}
+				    }
+				});
+				*/
+				};
+		}
+			else {
+				$.relogin();
+			}
+	});
+
+});
+
+
+</script>
+<div class="easyui-layout" data-options="fit : true,border : false">
+
+	<div
+		data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'"
+		style="height: 80px; background: #f4f4f4;">
+		 &nbsp;
+		<div style="padding: 3px">
+            <div id="gb_div1" style="display: none;" >
+            	<input id="gb_businessId" name="gb.businessId" />
+            </div>
+		 	&nbsp;&nbsp;
+		 	<div id="gb_div2" style="display: none;" >
+		 		<input id="gb_locksId" name="gb.locksId" />
+		 	</div>
+			&nbsp;&nbsp;
+			商品型号：<input id="gb_type" name="type">
+			&nbsp;&nbsp;
+			产地：<input id="gb_origin" name="origin">
+			&nbsp;&nbsp;
+			<input type="button" value="查询" onclick="lock_search()">
+		</div>
+	</div>
+
+	<div data-options="region:'center',border:false">
+		<table id="dg_gblock" class="easyui-datagrid" title="团购商品管理"
+			data-options="url:'gb_getGroupbuyByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'修改团购信息',
+                                    iconCls:'icon-edit',
+                                    handler:function()
+                                    {
+                                      edit('groupbuy_edit.html','修改信息','500','600','gb_editGbLocks.action','dg_gblock')
+                                    }},'-',
+                                    {
+                                    text:'删除团购商品',
+                                    iconCls:'icon-remove',
+                                    handler:function()
+                                    {
+                                      del('gb_deleteGbLocks.action','dg_gblock')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true">
+					</th>
+					
+					<th id="gb_businessIdAndName" data-options="field:'businessName',align:'center',width:20">
+						产品所属商铺
+					</th>
+					<th id="gb_locksIdAndName" data-options="field:'locksName',align:'center',width:20" >
+						产品名称
+					</th>
+					<th data-options="field:'type',align:'center',width:20,sortable:true" >
+						型号
+					</th>
+					<th data-options="field:'origin',align:'center',width:20,sortable:true">
+						产地
+					</th>
+					<!--
+					<th data-options="field:'comment',align:'center',width:20" >
+						产品描述
+					</th>
+					-->
+					<th data-options="field:'gbprice',align:'center',width:20,sortable:true">
+						团购价格
+					</th>
+					
+					<th data-options="field:'sales',align:'center',width:20,sortable:true">
+						销量
+					</th>
+					<th data-options="field:'createtime',align:'center',width:30,sortable:true" formatter="formatterstringdate">
+						上架时间
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	
+</div>

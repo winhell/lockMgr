@@ -1,0 +1,194 @@
+<script type="text/javascript">
+	function order(handlerurl,datagridid) {
+		var rows = $("#"+datagridid).datagrid("getChecked");
+		if (rows.length < 1) {
+			$.show_warning("错误", "请选择要操作的记录");
+			return;
+		}
+		$.messager.confirm('提示！', '确定执行这' + rows.length + '条记录?', function(r) {
+			if (r) {
+				para = {};
+				para.action = "order";
+				para.timespan = new Date().getTime();
+				para.id = "";
+				$.each(rows, function(i, row) {
+					para.id = para.id + "'" + row.id + "',";
+				});
+				$.ajax({
+					url : handlerurl,
+					data : para,
+					type : "POST",
+					dataType : "text",
+					success : function(result) {
+						dealAjaxResult(result,
+								function(r) {
+									$.show_warning("提示", "操作成功");
+									$("#"+datagridid).datagrid("reload")
+											.datagrid('clearSelections')
+											.datagrid('clearChecked');
+									;
+								});
+					}
+				});
+			}
+		});
+	}
+	
+	var applyOperator_search = function() {
+		var rows = $("#"+datagridid).datagrid("getChecked");
+		$('#dg_ao').datagrid('reload', {
+			beginDate : $("#ao_begindate").datetimebox("getValue"),
+			endDate : $("#ao_enddate").datetimebox("getValue"),
+			status : $("#ao_status").val(),
+			batchNum : rows.length,
+			betchFee : getBetchFee(),
+			detailData : getDetailData()
+		});
+	};
+	
+	applyOperator_search = function() {
+		var startDate = $("#ao_begindate").datebox('getValue');
+		var start = new Date(startDate.replace("-", "/").replace("-", "/"));
+		var endDate = $("#ao_enddate").datebox('getValue');
+		var end = new Date(endDate.replace("-", "/").replace("-", "/"));
+		if (end < start) {
+			alert("结束日期不能小于开始日期");
+			return false;
+		}
+		/* if (endDate.length <= 0 || startDate.length <= 0) {
+			alert("日期不能为空");
+			return false;
+		} */
+		$('#dg_ao').datagrid('load', {
+			beginDate : startDate,
+			endDate : endDate,
+			status : $("#ao_status").val()
+		});
+	};
+	
+
+	$(function() {
+		getSession(function f(r) {
+			var r = eval("(" + r + ")");
+			if (r != null) {
+				if (r.roleName == "admin") {
+				
+				};
+			} else {
+				$.relogin();
+			}
+		});
+		/* $("#ao_begindate").datetimebox({
+			value : getBeforeSevenDateyy_mm_dd(),
+			formatter : formaterdate,
+			parser : parserdate
+		});
+		$("#ao_enddate").datetimebox({
+			value : getNextDateyy_mm_dd(),
+			formatter : formaterdate,
+			parser : parserdate
+		}); */
+	});
+	//得到总金额
+	function getBetchFee() {
+		var rows = $("#"+datagridid).datagrid("getChecked");
+		var batchFee = 0;
+		for(var i=0; i<rows.length; i++) {
+			batchFee += rows[i]["amount"];
+		}
+		return batchFee;
+	}
+	//获得收款方(各商户)详细数据
+	function getDetailData() {
+		var rows = $("#"+datagridid).datagrid("getChecked");
+		var detailData = "";
+		for(var i=0; i<rows.length; i++) {
+			var randomData = Math.round(Math.random()*1000000);
+			var alipayAccount = rows[i]["alipayAccount"];
+			var accountName = rows[i]["accountName"];
+			var remark = "OK";
+			detailData = detailData + randomData + "^" + alipayAccount + "^" + accountName + "^" + remark + "|";
+		}
+		//去除detailData最后个"|"字符
+		var size = detailData.length;
+		var data = detailData.substring(0, size-2);
+		return data;
+	}
+	
+</script>
+
+<div class="easyui-layout" data-options="fit : true,border : false">
+	<div data-options="region:'north',title:'查询条件',border:false,iconCls:'icon-columns'" 
+		style="height: 80px; background: #f4f4f4;">
+		&nbsp;
+		<div style="padding: 3px">
+			<input type="text" id="ao_begindate" class="easyui-datebox" />
+			&nbsp;至 
+			<input type="text" id="ao_enddate" class="easyui-datebox" />
+			&nbsp;&nbsp; 
+			<select id="ao_status">
+				<option value=0>全部</option>
+				<option value=1>待审核</option>
+				<option value=2>审核通过</option>
+				<option value=-1>审核拒绝</option>
+			</select>
+			<input type="button" value="查询" onclick="applyOperator_search()">
+		</div>
+	</div>
+	
+	<div data-options="region:'center',border:false">
+		<table id="dg_ao" class="easyui-datagrid" title="商户提现管理"
+			data-options="url:'wd_getWithdrawByPage.action',
+                                idField : 'id',
+			                     fit : true,
+			                    striped:true,
+			                fitColumns : true,
+			                 singleSelect : false,
+			                 rownumbers : true,
+			                  remoteSort:true,
+			                pagination : true,
+			                  pageSize : 10,
+			                 pageList : [ 10, 20, 30, 40, 50 ],
+                                toolbar:[
+                                    {
+                                    text:'审核通过',
+                                    iconCls:'icon-ok',
+                                    handler:function()
+                                    {
+                                      order('withdraw.action','dg_ao')
+                                    }},'-',
+                                    {
+                                    text:'审核拒绝',
+                                    iconCls:'icon-no',
+                                    handler:function()
+                                    {
+                                      order('wd_denyAudit.action','dg_ao')
+                                    }}]">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true"></th>
+
+					<th data-options="field:'businessName',align:'center',width:15">
+						商户名
+					</th>
+					<th data-options="field:'applyTime',align:'center',width:15" formatter="formatterstringdate">
+						申请时间
+					</th>
+					<th data-options="field:'amount',align:'center',width:15">
+						提现金额
+					</th>
+					<th data-options="field:'alipayAccount',align:'center',width:15">
+						账号
+					</th>
+					<th data-options="field:'accountName',align:'center',width:15">
+						姓名
+					</th>
+					<th data-options="field:'status',align:'center',width:15" formatter="formatterApplyStatus">
+						状态
+					</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+</div>
